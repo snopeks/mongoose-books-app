@@ -19,7 +19,7 @@ app.use(express.static('public'));
 // body parser config to accept our datatypes
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
+var db = require('./models')
 
 ////////////////////
 //  DATA
@@ -74,7 +74,14 @@ app.get('/', function (req, res) {
 app.get('/api/books', function (req, res) {
   // send all books as JSON response
   console.log('books index');
-  res.json(books);
+  db.Book.find()
+  .populate('author')
+  .exec(function getAllBook(err, allBooks){
+    if(err) { return console.log("index error: " + err); }
+    res.json(allBooks)
+  })
+
+  // res.json(db.Book);
 });
 
 // get one book
